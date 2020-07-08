@@ -27,27 +27,25 @@ package ice.caster.android.shout;
 
 import java.security.InvalidParameterException;
 
+import android.content.Context;
 import android.media.AudioFormat;
 import android.media.AudioRecord;
 import android.media.MediaRecorder;
 import android.os.Handler;
+import android.util.Log;
+import android.widget.Toast;
 
 /**
  */
 public class Encoder {
 
 	static {
+
 		System.loadLibrary("lamemp3");
+
 	}
-
-
-	/**
-	 */
 	private boolean mIsRecording = false;
 
-	/**
-	 *
-	 */
 	private Handler mHandler;
 
 
@@ -61,43 +59,24 @@ public class Encoder {
      */
     private Config config;
 
-	/**
-	 *
-	 */
 	public static final int MSG_REC_STARTED = 0;
 
-	/**
-	 */
+
 	public static final int MSG_REC_STOPPED = 1;
 
-	/**
-	 */
+
 	public static final int MSG_ERROR_GET_MIN_BUFFERSIZE = 2;
 
-
-	/**
-	 */
 	public static final int MSG_ERROR_REC_START = 4;
-	
-	/**
-	 */
+
 	public static final int MSG_ERROR_AUDIO_RECORD = 5;
 
-	/**
-	 */
 	public static final int MSG_ERROR_AUDIO_ENCODE = 6;
 
-	/**
-	 */
 	public static final int MSG_ERROR_STREAM_INIT = 7;
 
-	/**
-	 */
 	public static final int MSG_ERROR_CLOSE_STREAM = 8;
 
-
-	/**
-	 */
 	public Encoder(Config config) {
 		if (config.sampleRate <= 0) {
 			throw new InvalidParameterException(
@@ -106,8 +85,6 @@ public class Encoder {
 		this.config = config;
 	}
 
-	/**
-	 */
 	public void start() {
 		if (mIsRecording) {
 			return;
@@ -141,7 +118,8 @@ public class Encoder {
 				shout = null;
 				try {
 					shout = new ShoutOutputStream();
-					shout.init("188.226.213.202", 8002, "/test", "test", "testing");
+					shout.init("192.168.137.1", 8000, "/ayyoub.ogg", "source", "ayyoub");
+					Log.d("dddd1","recording");
 				} catch (Exception e) { //FileNotFoundException
 					if (mHandler != null) {
 						mHandler.sendEmptyMessage(MSG_ERROR_STREAM_INIT);
@@ -156,6 +134,8 @@ public class Encoder {
 				try {
 					try {
 						audioRecord.startRecording();
+						Log.d("dddd2","recording");
+
 					} catch (IllegalStateException e) {
 						if (mHandler != null) {
 							mHandler.sendEmptyMessage(MSG_ERROR_REC_START);
@@ -170,6 +150,7 @@ public class Encoder {
 
 						int readSize = 0;
 						while (mIsRecording) {
+							Log.d("dddd3","recording");
 							readSize = audioRecord.read(buffer, 0, minBufferSize);
 							if (readSize < 0) {
 								if (mHandler != null) {

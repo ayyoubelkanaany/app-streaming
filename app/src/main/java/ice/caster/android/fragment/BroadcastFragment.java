@@ -1,5 +1,6 @@
 package ice.caster.android.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -17,29 +18,24 @@ import ice.caster.android.shout.Encoder;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
+import ice.caster.android.view.configuration;
+
+import static android.app.Activity.RESULT_OK;
 
 public class BroadcastFragment extends Fragment {
+    public final static int CHOOSE_BUTTON_REQUEST = 0;
+    private Button config;
+    static final String ICE_HOST    = "188.114.110.70";
 
-    /**
-     * Icecast host
-     */
-    static final String ICE_HOST    = "aaa.bbb.ccc.ddd";
 
-    /**
-     * Broadcast port that server listens incoming streams
-     */
-    static final int    ICE_PORT    = 8002;
+    static final int    ICE_PORT    = 8000;
 
-    /**
-     * Mount point of incoming source
-     */
-    static final String ICE_MOUNT   = "/test";
 
-    /**
-     * Credentials
-     */
-    static final String ICE_USER    = "user";
-    static final String ICE_PASS    = "pass";
+    static final String ICE_MOUNT   = "/ayyoub.ogg";
+
+
+    static final String ICE_USER    = "ayyoub";
+    static final String ICE_PASS    = "ayyoub";
 
     @InjectView(R.id.start)
     Button start;
@@ -47,6 +43,8 @@ public class BroadcastFragment extends Fragment {
     Button stop;
     @InjectView(R.id.status)
     TextView status;
+    @InjectView(R.id.configuration)
+    Button configuration;
 
     private Encoder encoder;
 
@@ -56,6 +54,7 @@ public class BroadcastFragment extends Fragment {
         encoder = new Encoder(
                 new Config().host(ICE_HOST).port(ICE_PORT).mount(ICE_MOUNT)
                         .username(ICE_USER).password(ICE_PASS).sampleRate(8000));
+
     }
 
     @Override
@@ -114,7 +113,13 @@ public class BroadcastFragment extends Fragment {
                 }
             }
         });
-
+        configuration.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), ice.caster.android.view.configuration.class);
+                startActivityForResult(intent,CHOOSE_BUTTON_REQUEST);
+            }
+        });
         start.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -127,5 +132,19 @@ public class BroadcastFragment extends Fragment {
                 encoder.stop();
             }
         });
+    }
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == CHOOSE_BUTTON_REQUEST) {
+            if (resultCode == RESULT_OK) {
+              Toast.makeText(getActivity(),"text : "+data.getStringExtra("serveur"),Toast.LENGTH_SHORT).show();
+              Toast.makeText(getActivity(),"text : "+data.getStringExtra("port"),Toast.LENGTH_SHORT).show();
+              Toast.makeText(getActivity(),"text : "+data.getStringExtra("mount"),Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(),"text : "+data.getStringExtra("user"),Toast.LENGTH_SHORT).show();
+              Toast.makeText(getActivity(),"text : "+data.getStringExtra("password"),Toast.LENGTH_SHORT).show();
+
+
+            }
+        }
     }
 }

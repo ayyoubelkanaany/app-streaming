@@ -18,12 +18,14 @@ android {
         }
     }
 }
-
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile fileTree(dir: 'jniLibs', include: ['*.so'])
-    testCompile 'junit:junit:4.12'
-    compile 'com.android.support:appcompat-v7:22.2.1'
-    compile 'com.google.android.gms:play-services:7.8.0'
-    compile 'com.jakewharton:butterknife:6.1.0'
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation fileTree(dir: 'jniLibs', include: ['*.so'])
+    implementation 'com.android.support.constraint:constraint-layout:1.1.3'
+    androidTestImplementation 'junit:junit:4.12'
+    annotationProcessor 'junit:junit:4.12'
+    implementation 'com.google.android.gms:play-services:7.8.0'
+    annotationProcessor 'com.google.android.gms:play-services:7.8.0'
+    implementation 'com.jakewharton:butterknife:6.1.0'
+    annotationProcessor 'com.jakewharton:butterknife:6.1.0'
 }
