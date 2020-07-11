@@ -35,9 +35,12 @@ import android.os.Handler;
 import android.util.Log;
 import android.widget.Toast;
 
+import ice.caster.android.fragment.BroadcastFragment;
+
 /**
  */
 public class Encoder {
+	public static boolean configchange = false;
 
 	static {
 
@@ -116,17 +119,17 @@ public class Encoder {
 				byte[] mp3buffer = new byte[(int) (7200 + buffer.length * 2 * 1.25)];
 
 				shout = null;
-				try {
-					shout = new ShoutOutputStream();
-					shout.init("192.168.137.1", 8000, "/ayyoub.ogg", "source", "ayyoub");
-					Log.d("dddd1","recording");
-				} catch (Exception e) { //FileNotFoundException
-					if (mHandler != null) {
-						mHandler.sendEmptyMessage(MSG_ERROR_STREAM_INIT);
-					}
-					return;
-				}
 
+				  try {
+					  shout = new ShoutOutputStream();
+					  shout.init(BroadcastFragment.ICE_HOST, BroadcastFragment.ICE_PORT, BroadcastFragment.ICE_MOUNT, BroadcastFragment.ICE_USER, BroadcastFragment.ICE_PASS);
+					  Log.d("dddd1","recording");
+				  } catch (Exception e) { //FileNotFoundException
+					  if (mHandler != null) {
+						  mHandler.sendEmptyMessage(MSG_ERROR_STREAM_INIT);
+					  }
+					  return;
+			  }
 				// Lame init
 				Lame.init(config.sampleRate, 1, config.sampleRate, 32);
 
